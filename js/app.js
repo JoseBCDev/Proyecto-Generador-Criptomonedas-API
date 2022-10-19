@@ -37,7 +37,6 @@ function leerValor(e)
 {
    objBusqueda[e.target.name] = e.target.value;
 
-    console.log(objBusqueda);
 }
 
 function validarFormulario(e)
@@ -52,8 +51,52 @@ function validarFormulario(e)
         return;
     }
 
+    //Consultar a la API
+    consultarApi();
 
 }
+
+function consultarApi()
+{
+    const {criptomoneda,moneda} = objBusqueda;
+
+    const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
+
+    fetch(url)
+        .then(respuesta => respuesta.json())
+        .then(cotizando => mostrarCotizacionHTML(cotizando.DISPLAY[criptomoneda][moneda]))
+}
+//Mostrando en el HTML
+function mostrarCotizacionHTML(cotizacion)
+{
+    limpiarHTML();
+    //Destructuring
+    const {PRICE,HIGHDAY,LOWDAY,CHANGEPCT24HOUR,LASTUPDATE} = cotizacion;
+    //creando elemento html
+    const precio = document.createElement('p');
+    precio.classList.add('precio');
+    precio.innerHTML= `El precio es: <span>${PRICE}</span>`;
+
+    const precioAlto = document.createElement('p');
+    precioAlto.innerHTML= `El precio más alto es: <span>${HIGHDAY}</span>`;
+
+    const precioBajo = document.createElement('p');
+    precioBajo.innerHTML= `El precio más bajo es: <span>${LOWDAY}</span>`;
+
+    const ultimasHoras = document.createElement('p');
+    ultimasHoras.innerHTML= `Variación ultimas 24h: <span>${CHANGEPCT24HOUR}</span>`;
+
+    const ultimaActualizacion = document.createElement('p');
+    ultimaActualizacion.innerHTML= `Ultima Actualización: <span>${LASTUPDATE}</span>`;
+    //enviando como hijo al elementopadre
+    resultadoDiv.appendChild(precio);
+    resultadoDiv.appendChild(precioAlto);
+    resultadoDiv.appendChild(precioBajo);
+    resultadoDiv.appendChild(ultimasHoras);
+    resultadoDiv.appendChild(ultimaActualizacion);
+
+}
+
 //Extraendo informacion de la API para los tipos de Criptomonedas
 function consultarCriptomonedas(){
 
@@ -98,4 +141,12 @@ function mostrarAlerta(mensaje)
     }
 
     
+}
+
+function limpiarHTML()
+{
+    while(resultadoDiv.firstChild)
+    {
+        resultadoDiv.removeChild(resultadoDiv.firstChild);
+    }
 }
