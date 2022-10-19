@@ -61,6 +61,9 @@ function consultarApi()
     const {criptomoneda,moneda} = objBusqueda;
 
     const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
+    //Cargando mientras se consulta al servidor
+
+    spinner();
 
     fetch(url)
         .then(respuesta => respuesta.json())
@@ -149,4 +152,27 @@ function limpiarHTML()
     {
         resultadoDiv.removeChild(resultadoDiv.firstChild);
     }
+}
+//Funcion cargando
+function spinner()
+{
+    limpiarHTML();
+    const spinner = document.createElement('div');
+    spinner.classList.add('sk-fading-circle');
+    spinner.innerHTML = `
+    <div class="sk-circle1 sk-circle"></div>
+    <div class="sk-circle2 sk-circle"></div>
+    <div class="sk-circle3 sk-circle"></div>
+    <div class="sk-circle4 sk-circle"></div>
+    <div class="sk-circle5 sk-circle"></div>
+    <div class="sk-circle6 sk-circle"></div>
+    <div class="sk-circle7 sk-circle"></div>
+    <div class="sk-circle8 sk-circle"></div>
+    <div class="sk-circle9 sk-circle"></div>
+    <div class="sk-circle10 sk-circle"></div>
+    <div class="sk-circle11 sk-circle"></div>
+    <div class="sk-circle12 sk-circle"></div>
+    `;
+
+    resultadoDiv.appendChild(spinner);
 }
