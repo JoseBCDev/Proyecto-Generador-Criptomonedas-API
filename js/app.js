@@ -55,8 +55,26 @@ function validarFormulario(e)
     consultarApi();
 
 }
+//CONSULTANDO API UTILIZANDO ASYNC AWAIT
+async function consultarApi()
+{
+    const {criptomoneda,moneda} = objBusqueda;
 
-function consultarApi()
+    const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
+    //Cargando mientras se consulta al servidor
+
+    spinner();
+    try {
+        const respuesta = await fetch(url);
+        const cotizando = await respuesta.json();
+            mostrarCotizacionHTML(cotizando.DISPLAY[criptomoneda][moneda]);
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+//1ERA FORMA UTILIZANDO FECTH
+/* function consultarApi()
 {
     const {criptomoneda,moneda} = objBusqueda;
 
@@ -68,7 +86,8 @@ function consultarApi()
     fetch(url)
         .then(respuesta => respuesta.json())
         .then(cotizando => mostrarCotizacionHTML(cotizando.DISPLAY[criptomoneda][moneda]))
-}
+} */
+
 //Mostrando en el HTML
 function mostrarCotizacionHTML(cotizacion)
 {
@@ -100,8 +119,24 @@ function mostrarCotizacionHTML(cotizacion)
 
 }
 
-//Extraendo informacion de la API para los tipos de Criptomonedas
-function consultarCriptomonedas(){
+//Extraendo informacion de la API para los tipos de Criptomonedas con ASYNC AWAIT
+async function consultarCriptomonedas(){
+
+    const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD`;
+
+    try {
+
+    const respuesta = await fetch(url);
+    const resultado = await respuesta.json();
+    const criptomonedas = await obtenerCriptomonedas(resultado.Data);
+        selectCriptomonedas(criptomonedas);
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+//1ERA FORMA UTILIZANDO FETCH
+/* function consultarCriptomonedas(){
 
     const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD`;
 
@@ -109,7 +144,9 @@ function consultarCriptomonedas(){
         .then(respuesta => respuesta.json())
         .then(resultado => obtenerCriptomonedas(resultado.Data))
         .then(criptomonedas => selectCriptomonedas(criptomonedas))
-}
+
+        
+} */
 //Mostramos los tipos de criptomonedas
 function selectCriptomonedas(criptomonedas)
 {
